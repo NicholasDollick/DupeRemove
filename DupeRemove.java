@@ -5,7 +5,6 @@ import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.nio.*;
 
 public class DupeRemove {
     private static ArrayList<String> detectedCopies;

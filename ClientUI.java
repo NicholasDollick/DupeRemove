@@ -1,12 +1,6 @@
 import java.io.*;
 import java.awt.*;
-import java.net.*;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.awt.event.*;
-import javax.net.ssl.SSLSocket;
 import javax.swing.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,17 +9,17 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.nio.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import java.awt.Color;
+import java.awt.Dimension;
 
 public class ClientUI {
     String name = "DupeRemove";
     JFrame chatFrame = new JFrame(name);
-    JTextArea chatBox;
-    JButton sendMessage;
     JFrame preFrame;
-    JTextField usernameBox;
-    JPasswordField passwordBox;
-    JTextField serverIPInput;
-    JTextField portNum;
     JFileChooser fc = new JFileChooser();
     JButton openButton;
     JTextArea textArea = new JTextArea();
@@ -42,13 +36,13 @@ public class ClientUI {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        chatFrame.setVisible(false);
-        preFrame = new JFrame(name);
-        JButton enterServer = new JButton("Enter Chat Server");
-        openButton = new JButton("Choose A Directory");
+        JFrame frame = new JFrame("DupeRemove");
+        JTextPane pane = new JTextPane();
+        JButton button = new JButton("Run");
+        JButton openButton = new JButton("Choose Dir");
         JLabel dirDisplay = new JLabel("File Thing Here");
+        JLabel boxDesc = new JLabel("Files Checked");
+        pane.setEditable(false);
 
         openButton.addActionListener(new ActionListener() {
 
@@ -70,7 +64,10 @@ public class ClientUI {
             }
         });
 
-        JButton createAccount = new JButton("Create Account");
+        // the functions used to add colored text
+        addColoredText(pane, "Red Text\n", Color.RED);
+        addColoredText(pane, "Blue Text\n", Color.BLUE);
+
         JPanel prePanel = new JPanel(new GridBagLayout());
 
         GridBagConstraints preRight = new GridBagConstraints();
@@ -88,13 +85,28 @@ public class ClientUI {
 
         prePanel.add(openButton, preLeft);
         prePanel.add(dirDisplay, preRight);
-        prePanel.add(textArea, preBottom);
+        prePanel.add(boxDesc, preLeft);
 
-        preFrame.add(prePanel, BorderLayout.CENTER);
-        preFrame.add(createAccount, BorderLayout.SOUTH);
-        preFrame.add(enterServer, BorderLayout.SOUTH);
-        preFrame.setSize(650, 350);
-        preFrame.setVisible(true);
+        frame.add(prePanel, BorderLayout.NORTH);
 
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pane.setPreferredSize(new Dimension(650, 350));
+        frame.getContentPane().add(pane, BorderLayout.CENTER);
+        frame.getContentPane().add(button, BorderLayout.SOUTH);
+        frame.pack();
+        frame.setVisible(true);
+
+    }
+
+    public void addColoredText(JTextPane pane, String text, Color color) {
+        StyledDocument doc = pane.getStyledDocument();
+
+        Style style = pane.addStyle("Color Style", null);
+        StyleConstants.setForeground(style, color);
+        try {
+            doc.insertString(doc.getLength(), text, style);
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
     }
 }
