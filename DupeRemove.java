@@ -1,20 +1,25 @@
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.nio.*;
 
 public class DupeRemove {
     private static ArrayList<String> detectedCopies;
 
     private static ArrayList<String> fileHashes;
 
+    private static String dupeDir = "/home/nullbytes/DupesHere";
+
     public static void main(String[] args) {
         fileHashes = new ArrayList<String>();
         detectedCopies = new ArrayList<String>();
         System.out.println("[*] Starting Search");
-        new DupeRemove().listFolders(new File("/home/nullbytes/Downloads/test"));
+        new File(dupeDir).mkdirs(); // this should prompt
+        new DupeRemove().listFolders(new File("/home/nullbytes/Downloads/test")); // this should also prompt
 
         if (detectedCopies.size() > 0) {
             System.out.printf("[*] Found %d duplicate files: \n", detectedCopies.size());
@@ -54,7 +59,7 @@ public class DupeRemove {
             if (fileHashes.contains(currentHash)) {
                 // if file match is found, this executes
                 detectedCopies.add(file.getName());
-                // this should instead move into a folder for user verfictation
+                moveDupes(file);
             } else {
                 fileHashes.add(currentHash);
             }
@@ -73,4 +78,17 @@ public class DupeRemove {
         }
         return new byte[4];
     }
+
+    public void moveDupes(File dupeFile) {
+        // files will only be copied during testing to prevent data loss
+        String copyToPath = dupeDir + "/" + dupeFile.getName();
+        File target = new File(copyToPath);
+        try {
+            Files.copy(dupeFile.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
