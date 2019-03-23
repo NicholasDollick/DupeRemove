@@ -85,6 +85,8 @@ public class DupeRemove {
         File target = new File(copyToPath);
         try {
             Files.copy(dupeFile.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            // Files.move(dupeFile.toPath(), target.toPath(),
+            // StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
             e.printStackTrace();
         }
