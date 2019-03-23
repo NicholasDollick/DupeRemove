@@ -17,7 +17,7 @@ public class DupeRemove {
         new DupeRemove().listFolders(new File("/home/nullbytes/Downloads/test"));
 
         if (detectedCopies.size() > 0) {
-            System.out.println(detectedCopies.size());
+            System.out.printf("[*] Found %d duplicate files: \n", detectedCopies.size());
             for (String name : detectedCopies)
                 System.out.println(name);
         }
@@ -32,43 +32,33 @@ public class DupeRemove {
             }
         });
 
-        doSomething(dir); // this is a really stupid name, needs to be fixed
+        findDupes(dir);
 
         for (File folder : subDir) {
             listFolders(folder);
         }
     }
 
+    // currently unsued function
     public void listFile(File dir) {
         File[] files = dir.listFiles();
         for (File file : files) {
-            // System.out.println(file.getName());
+            System.out.println(file.getName());
         }
     }
 
-    public void doSomething(File dir) {
+    public void findDupes(File dir) {
         File[] files = dir.listFiles();
-        // ArrayList<byte[]> fileHashs = new ArrayList<>();
         for (File file : files) {
             String currentHash = Arrays.toString(getHash(file));
-            // fileHashs.add(getHash(file));
-            // System.out.println(file.getName());
-            // System.out.println(Arrays.hashCode(currentHash)); // int
-            // System.out.println((Arrays.toString(currentHash))); // string
-            // System.out.println();
             if (fileHashes.contains(currentHash)) {
-                System.out.println(currentHash.toString());
+                // if file match is found, this executes
                 detectedCopies.add(file.getName());
+                // this should instead move into a folder for user verfictation
             } else {
                 fileHashes.add(currentHash);
             }
         }
-        // System.out.println(fileHashes.size());
-        /*
-         * if (Arrays.equals(fileHashs.get(0), fileHashs.get(1))) // this is assuming we
-         * only compare two files System.out.println("These files are the same"); else
-         * System.out.println("These files are not the same");
-         */
     }
 
     public byte[] getHash(File file) {
