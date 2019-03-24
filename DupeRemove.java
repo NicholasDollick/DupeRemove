@@ -43,14 +43,6 @@ public class DupeRemove {
         }
     }
 
-    // currently unsued function
-    public void listFile(File dir) {
-        File[] files = dir.listFiles();
-        for (File file : files) {
-            System.out.println(file.getName());
-        }
-    }
-
     public void findDupes(File dir) {
         File[] files = dir.listFiles();
         for (File file : files) {

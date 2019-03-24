@@ -2,13 +2,6 @@ import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.nio.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -17,13 +10,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 public class ClientUI {
-    String name = "DupeRemove";
-    JFrame chatFrame = new JFrame(name);
-    JFrame preFrame;
     JFileChooser fc = new JFileChooser();
-    JButton openButton;
-    JTextArea textArea = new JTextArea();
-
     JTextPane pane = new JTextPane();
     private String dirToSearch = ""; // this needs to be fetced...or set?
     private String dirToMove = ""; // this needs to be fetched...or set?
