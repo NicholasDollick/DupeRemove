@@ -5,6 +5,6 @@ import java.awt.Color;
 public class driver {
     public static void main(String[] args) {
         ClientUI test = new ClientUI();
-        test.addColoredText("text", Color.RED);
+        test.addColoredText("text\n", Color.RED);
     }
 }

@@ -25,8 +25,8 @@ public class ClientUI {
     JTextArea textArea = new JTextArea();
 
     JTextPane pane = new JTextPane();
-    private String dirToSearch = ""; // this needs to be fetced
-    private String dirToMove = ""; // this needs to be fetched
+    private String dirToSearch = ""; // this needs to be fetced...or set?
+    private String dirToMove = ""; // this needs to be fetched...or set?
 
     public static void main(String[] args) {
         new ClientUI();
@@ -94,12 +94,22 @@ public class ClientUI {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 // this is what happens when the run button is clicked
+                if (dirToMove.equals("") || dirToSearch.equals("")) {
+                    // dont run if both paths arent set
+                    System.out.println("Must Select Two Paths");
+                } else {
+                    // this should be logic execution
+                    System.out.println("This would be a run");
+                    addColoredText("text\n", Color.BLACK);
+                    System.out.println(dirToMove);
+                    System.out.println(dirToSearch);
+                }
             }
         });
 
         // the functions used to add colored text
         addColoredText("Red Text\n", Color.RED);
-        addColoredText("Blue Text\n", Color.BLUE);
+        addColoredText("Blue Text\n", Color.BLACK);
 
         JPanel prePanel = new JPanel(new GridBagLayout());
 
