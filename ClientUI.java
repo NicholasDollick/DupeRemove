@@ -24,6 +24,10 @@ public class ClientUI {
     JButton openButton;
     JTextArea textArea = new JTextArea();
 
+    JTextPane pane = new JTextPane();
+    private String dirToSearch = ""; // this needs to be fetced
+    private String dirToMove = ""; // this needs to be fetched
+
     public static void main(String[] args) {
         new ClientUI();
     }
@@ -37,10 +41,11 @@ public class ClientUI {
             e.printStackTrace();
         }
         JFrame frame = new JFrame("DupeRemove");
-        JTextPane pane = new JTextPane();
-        JButton button = new JButton("Run");
+        JButton runButton = new JButton("Run");
         JButton openButton = new JButton("Choose Dir");
         JLabel dirDisplay = new JLabel("File Thing Here");
+        JButton saveToButton = new JButton("Move File To");
+        JLabel dirToSaveDisplay = new JLabel("Moving File Here");
         JLabel boxDesc = new JLabel("Files Checked");
         pane.setEditable(false);
 
@@ -49,24 +54,52 @@ public class ClientUI {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 fc.setCurrentDirectory(new File("."));
-                fc.setDialogTitle("Hello World");
+                fc.setDialogTitle("Folder Selection");
                 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 if (fc.showOpenDialog(openButton) == JFileChooser.APPROVE_OPTION) {
                     // nothing should really happen here
                 }
                 try {
-                    String file = fc.getSelectedFile().getPath();
-                    System.out.println(file);
-                    dirDisplay.setText(file);
+                    String filePath = fc.getSelectedFile().getPath();
+                    System.out.println(filePath);
+                    dirDisplay.setText(filePath);
+                    dirToSearch = filePath;
                 } catch (Exception e) {
                     // add something here eventually
                 }
             }
         });
 
+        saveToButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                fc.setCurrentDirectory(new File("."));
+                fc.setDialogTitle("Folder Selection");
+                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                if (fc.showOpenDialog(openButton) == JFileChooser.APPROVE_OPTION) {
+                    // nothing should really happen here
+                }
+                try {
+                    String filePath = fc.getSelectedFile().getPath();
+                    System.out.println(filePath);
+                    dirToSaveDisplay.setText(filePath);
+                    dirToMove = filePath;
+                } catch (Exception e) {
+                    // add something here eventually
+                }
+            }
+        });
+
+        runButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                // this is what happens when the run button is clicked
+            }
+        });
+
         // the functions used to add colored text
-        addColoredText(pane, "Red Text\n", Color.RED);
-        addColoredText(pane, "Blue Text\n", Color.BLUE);
+        addColoredText("Red Text\n", Color.RED);
+        addColoredText("Blue Text\n", Color.BLUE);
 
         JPanel prePanel = new JPanel(new GridBagLayout());
 
@@ -85,6 +118,8 @@ public class ClientUI {
 
         prePanel.add(openButton, preLeft);
         prePanel.add(dirDisplay, preRight);
+        prePanel.add(saveToButton, preLeft);
+        prePanel.add(dirToSaveDisplay, preRight);
         prePanel.add(boxDesc, preLeft);
 
         frame.add(prePanel, BorderLayout.NORTH);
@@ -92,16 +127,15 @@ public class ClientUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pane.setPreferredSize(new Dimension(650, 350));
         frame.getContentPane().add(pane, BorderLayout.CENTER);
-        frame.getContentPane().add(button, BorderLayout.SOUTH);
+        frame.getContentPane().add(runButton, BorderLayout.SOUTH);
         frame.pack();
         frame.setVisible(true);
-
     }
 
-    public void addColoredText(JTextPane pane, String text, Color color) {
-        StyledDocument doc = pane.getStyledDocument();
+    public void addColoredText(String text, Color color) {
+        StyledDocument doc = this.pane.getStyledDocument();
 
-        Style style = pane.addStyle("Color Style", null);
+        Style style = this.pane.addStyle("Color Style", null);
         StyleConstants.setForeground(style, color);
         try {
             doc.insertString(doc.getLength(), text, style);
