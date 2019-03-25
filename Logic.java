@@ -15,7 +15,7 @@ public class Logic {
         fileHashes = new ArrayList<>();
         detectedCopies = new ArrayList<>();
         destDir = moveToDir;
-        new File(destDir).mkdirs(); // create place to move dupe files
+        new File(destDir).mkdirs(); // create folder to move dupe files if not exist
         listFolders(new File(toSearchDir));
 
         return detectedCopies;
@@ -38,17 +38,21 @@ public class Logic {
     public static void findDupes(File dir) {
         File[] files = dir.listFiles();
         for (File file : files) {
-            String currentHash = Arrays.toString(getHash(file));
-            if (fileHashes.contains(currentHash)) {
-                // this will fight back against the ui
-                // it might be easier to return the files[]
-                // and then have the foreach loop happen in the UI thread
-                // this will allow a more graceful update of the UI box
-                detectedCopies.add(file.getName());
-                moveDupes(file, destDir);
-            } else {
-                fileHashes.add(currentHash);
-            }
+        	// we don't want to include empty parent folders in cleanup
+        	if (!file.isDirectory()) {
+                String currentHash = Arrays.toString(getHash(file));
+                if (fileHashes.contains(currentHash)) {
+                    // this will fight back against the ui
+                    // it might be easier to return the files[]
+                    // and then have the foreach loop happen in the UI thread
+                    // this will allow a more graceful update of the UI box?
+                    detectedCopies.add(file.getName());
+                    moveDupes(file, destDir);
+                } else {
+                    fileHashes.add(currentHash);
+                }
+        		
+        	}
         }
     }
 
