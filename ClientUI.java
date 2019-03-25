@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class ClientUI {
     JFileChooser fc = new JFileChooser();
     JTextPane pane;
+    JScrollPane scrollPane;
     private String dirToSearch = ""; // this needs to be fetced...or set?
     private String dirToMove = ""; // this needs to be fetched...or set?
     private ArrayList<String> result = new ArrayList<>();
@@ -27,6 +28,9 @@ public class ClientUI {
         }
         pane = new JTextPane();
         pane.setEditable(false);
+        scrollPane = new JScrollPane(pane);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         JFrame frame = new JFrame("DupeRemove");
         JButton runButton = new JButton("Run");
         JButton openButton = new JButton("Choose Dir");
@@ -128,7 +132,7 @@ public class ClientUI {
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pane.setPreferredSize(new Dimension(650, 350));
-        frame.getContentPane().add(pane, BorderLayout.CENTER);
+        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
         frame.getContentPane().add(runButton, BorderLayout.SOUTH);
         frame.pack();
         frame.setVisible(true);
