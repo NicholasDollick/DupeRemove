@@ -8,16 +8,14 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.ArrayList;
 
 public class ClientUI {
     JFileChooser fc = new JFileChooser();
-    JTextPane pane = new JTextPane();
+    JTextPane pane;
     private String dirToSearch = ""; // this needs to be fetced...or set?
     private String dirToMove = ""; // this needs to be fetched...or set?
-
-    public static void main(String[] args) {
-        new ClientUI();
-    }
+    private ArrayList<String> result = new ArrayList<>();
 
     // constructor
     public ClientUI() {
@@ -27,17 +25,17 @@ public class ClientUI {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        pane = new JTextPane();
+        pane.setEditable(false);
         JFrame frame = new JFrame("DupeRemove");
         JButton runButton = new JButton("Run");
         JButton openButton = new JButton("Choose Dir");
         JLabel dirDisplay = new JLabel("File Thing Here");
         JButton saveToButton = new JButton("Move File To");
         JLabel dirToSaveDisplay = new JLabel("Moving File Here");
-        JLabel boxDesc = new JLabel("Files Checked");
-        pane.setEditable(false);
+        JLabel boxDesc = new JLabel("Results");
 
         openButton.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 fc.setCurrentDirectory(new File("."));
@@ -48,7 +46,6 @@ public class ClientUI {
                 }
                 try {
                     String filePath = fc.getSelectedFile().getPath();
-                    System.out.println(filePath);
                     dirDisplay.setText(filePath);
                     dirToSearch = filePath;
                 } catch (Exception e) {
@@ -68,7 +65,6 @@ public class ClientUI {
                 }
                 try {
                     String filePath = fc.getSelectedFile().getPath();
-                    System.out.println(filePath);
                     dirToSaveDisplay.setText(filePath);
                     dirToMove = filePath;
                 } catch (Exception e) {
@@ -83,20 +79,29 @@ public class ClientUI {
                 // this is what happens when the run button is clicked
                 if (dirToMove.equals("") || dirToSearch.equals("")) {
                     // dont run if both paths arent set
-                    System.out.println("Must Select Two Paths");
+                    JOptionPane.showMessageDialog(null, "Must Select Two Paths", "Warning",
+                            JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     // this should be logic execution
-                    System.out.println("This would be a run");
-                    addColoredText("text\n", Color.BLACK);
-                    System.out.println(dirToMove);
-                    System.out.println(dirToSearch);
+                    String optionMessage = "Are you sure you want to check files in: \n`" + dirToSearch
+                            + "`\n Duplicate files found will be removed";
+                    int dialogResult = JOptionPane.showConfirmDialog(null, optionMessage, "Warning",
+                            JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        boxDesc.setText("Searching...");
+                        result = Logic.run(dirToSearch, dirToMove);
+
+                        if (result.size() > 0) {
+                            boxDesc.setText(result.size() + " Duplicate Files Found");
+                            for (String fileName : result)
+                                addColoredText(fileName + "\n", Color.RED);
+                        } else {
+                            boxDesc.setText("No Duplicate Files Found");
+                        }
+                    }
                 }
             }
         });
-
-        // the functions used to add colored text
-        addColoredText("Red Text\n", Color.RED);
-        addColoredText("Blue Text\n", Color.BLACK);
 
         JPanel prePanel = new JPanel(new GridBagLayout());
 

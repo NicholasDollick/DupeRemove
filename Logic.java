@@ -7,19 +7,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Logic {
-    private static ArrayList<String> detetedCopies;
+    private static ArrayList<String> detectedCopies;
     private static ArrayList<String> fileHashes;
+    private static String destDir = "";
 
-    public void run(String toSearchDir, String moveToDir) {
+    public static ArrayList<String> run(String toSearchDir, String moveToDir) {
         fileHashes = new ArrayList<>();
-        detetedCopies = new ArrayList<>();
-        new File(toSearchDir).mkdirs();
-        // list stuff here
+        detectedCopies = new ArrayList<>();
+        destDir = moveToDir;
+        new File(destDir).mkdirs(); // create place to move dupe files
+        listFolders(new File(toSearchDir));
+
+        return detectedCopies;
     }
 
-    public void listFolders(File dir) {
+    public static void listFolders(File dir) {
         File[] subDir = dir.listFiles(new FileFilter() {
-
             @Override
             public boolean accept(File file) {
                 return file.isDirectory();
@@ -32,7 +35,7 @@ public class Logic {
             listFolders(folder);
     }
 
-    public void findDupes(File dir) {
+    public static void findDupes(File dir) {
         File[] files = dir.listFiles();
         for (File file : files) {
             String currentHash = Arrays.toString(getHash(file));
@@ -41,15 +44,15 @@ public class Logic {
                 // it might be easier to return the files[]
                 // and then have the foreach loop happen in the UI thread
                 // this will allow a more graceful update of the UI box
-                detetedCopies.add(file.getName());
-                moveDupes(file, null); // second arg needs to be the dest dir string
+                detectedCopies.add(file.getName());
+                moveDupes(file, destDir);
             } else {
                 fileHashes.add(currentHash);
             }
         }
     }
 
-    public byte[] getHash(File file) {
+    public static byte[] getHash(File file) {
         if (!file.isDirectory()) {
             try {
                 byte[] b = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
@@ -63,10 +66,11 @@ public class Logic {
     }
 
     // this needs to be updated pretty badly
-    public void moveDupes(File dupeFile, String destDir) {
+    public static void moveDupes(File dupeFile, String destDir) {
         // files will only be copied during testing to prevent data loss
         String copyToPath = destDir + "/" + dupeFile.getName();
         File target = new File(copyToPath);
+
         try {
             Files.copy(dupeFile.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
             // Files.move(dupeFile.toPath(), target.toPath(),
@@ -74,6 +78,5 @@ public class Logic {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
